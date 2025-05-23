@@ -1,0 +1,18 @@
+browser-use==0.1.42
+pyperclip==1.9.0
+gradio==5.27.0
+json-repair
+langchain-mistralai==0.2.4
+MainContentExtractor==0.0.4
+langchain-ibm==0.3.10
+langchain_mcp_adapters==0.0.9
+langgraph==0.3.34
+
+# OpenTelemetry (todas as libs com versões compatíveis)
+opentelemetry-api==1.33.1
+opentelemetry-sdk==1.33.1
+opentelemetry-semantic-conventions==0.54b1
+opentelemetry-exporter-otlp-proto-common==1.33.0
+opentelemetry-instrumentation==0.54b0
+opentelemetry-instrumentation-asgi==0.54b0
+opentelemetry-instrumentation-fastapi==0.54b0
