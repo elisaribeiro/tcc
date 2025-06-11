@@ -5,7 +5,7 @@ import numpy as np
 
 class HuggingFaceEmbedding(Embeddings):
     print("Iniciando embedding...")
-    def __init__(self, model_name="sentence-transformers/all-MiniLM-L6-v2"):
+    def __init__(self, model_name="sentence-transformers/all-mpnet-base-v2"):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModel.from_pretrained(model_name)
         self.model.eval()

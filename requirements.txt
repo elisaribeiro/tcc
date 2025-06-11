@@ -1,4 +1,6 @@
-browser-use==0.1.42
+# browser-use instalado direto do GitHub (requere Python >=3.11)
+git+https://github.com/browser-use/browser-use.git
+
 pyperclip==1.9.0
 gradio==5.27.0
 json-repair
@@ -8,11 +10,20 @@ langchain-ibm==0.3.10
 langchain_mcp_adapters==0.0.9
 langgraph==0.3.34
 
-# OpenTelemetry (todas as libs com versões compatíveis)
+# OpenTelemetry com versões alinhadas para evitar conflitos
 opentelemetry-api==1.33.1
 opentelemetry-sdk==1.33.1
 opentelemetry-semantic-conventions==0.54b1
 opentelemetry-exporter-otlp-proto-common==1.33.0
-opentelemetry-instrumentation==0.54b0
-opentelemetry-instrumentation-asgi==0.54b0
-opentelemetry-instrumentation-fastapi==0.54b0
+opentelemetry-instrumentation==0.54b1
+opentelemetry-instrumentation-asgi==0.54b1
+opentelemetry-instrumentation-fastapi==0.54b1
+
+# Bibliotecas adicionais para transformers, numpy e torch
+torch
+transformers
+numpy
+langchain-community
+chromadb
+pypdf
+langchain-chroma
