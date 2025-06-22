@@ -131,23 +131,23 @@ def _find_pdf_links_on_page(html_content: str, base_url: str) -> List[str]:
 def download_pdfs_from_editals_json(
     editals_json_list: List[Dict[str, Any]], # Recebe uma lista de dicionários (JSON parseado)
     download_dir: str = "pdfs_baixados"
-) -> int:
+) -> List[str]: # <<< CORREÇÃO AQUI: O tipo de retorno deve ser List[str]
     """
     Baixa os PDFs dos editais fornecidos em uma lista de dicionários JSON.
     Cria o diretório de download se não existir.
-    Retorna o número de PDFs baixados com sucesso.
+    Retorna a lista dos caminhos dos PDFs baixados com sucesso.
     """
     print(f"\n--- Iniciando o download de PDFs dos editais em JSON ---")
 
     if not editals_json_list:
         print("Nenhum edital encontrado na lista JSON para baixar PDFs.")
-        return 0
+        return [] # Retorna uma lista vazia se não houver editais
 
     os.makedirs(download_dir, exist_ok=True)
     print(f"DEBUG: Diretório de download '{download_dir}' assegurado.")
 
-    download_count = 0
-    failed_downloads = []
+    successful_downloads_paths: List[str] = [] # Garante tipagem explícita para o Pylance
+    # failed_downloads (removido, pois não é retornado pela função)
 
     for edital in editals_json_list:
         title = edital.get('title', 'titulo_desconhecido')
@@ -155,152 +155,28 @@ def download_pdfs_from_editals_json(
 
         final_title_sanitized = _sanitize_filename(title)
         
-        # O download_pdf já lida com URLs inválidas/genéricas
-        if not url:
-            print(f"AVISO: Edital '{final_title_sanitized}' não possui URL. Pulando download.")
+        if not url or url.lower() == 'link permanente' or url.lower() == 'url desconhecida':
+            print(f"AVISO: Edital '{final_title_sanitized}' não possui URL válida. Pulando download.")
             continue
 
         file_path = os.path.join(download_dir, f"{final_title_sanitized}.pdf")
 
         if os.path.exists(file_path):
             print(f"DEBUG: PDF '{final_title_sanitized}.pdf' já existe. Pulando download.")
-            download_count += 1
-            continue
-
-        print(f"DEBUG: Baixando '{final_title_sanitized}.pdf' de '{url}'...")
-        if download_pdf(url, file_path): # Chama a função auxiliar download_pdf
-            download_count += 1
-        else:
-            failed_downloads.append(f"- {final_title_sanitized} (URL: {url})")
-
-    print(f"\n--- Download de PDFs Concluído ---")
-    print(f"Total de PDFs baixados: {download_count}")
-    if failed_downloads:
-        print("Falhas no download:")
-        for fail in failed_downloads:
-            print(fail)
-    else:
-        print("Todos os PDFs foram baixados ou já existiam no diretório.")
-    
-    return download_count
-
-
-def download_pdfs_from_editals_from_txt(
-    txt_file_path: str = "editais_encontrados.txt",
-    download_dir: str = "pdfs_baixados"
-) -> int:
-    """
-    Lê a lista de editais de um arquivo TXT formatado para humanos,
-    baixa os PDFs e os salva em um diretório especificado.
-    Esta função é mais sensível a mudanças no formato do TXT.
-    """
-    print(f"\n--- Iniciando o download de PDFs dos editais do arquivo TXT ---")
-
-    if not os.path.exists(txt_file_path):
-        print(f"AVISO: Arquivo TXT '{txt_file_path}' não encontrado. Execute a opção 2 primeiro para gerá-lo.")
-        return 0
-
-    editals_data: List[Dict[str, Any]] = []
-    current_edital: Dict[str, Any] = {}
-    
-    title_re = re.compile(r"^\s*Título:\s*(.*)$")
-    agency_re = re.compile(r"^\s*Agência:\s*(.*)$")
-    deadline_re = re.compile(r"^\s*Prazo Final:\s*(.*)$")
-    url_re = re.compile(r"^\s*URL:\s*(.*)$")
-    number_re = re.compile(r"^\s*Número:\s*(.*)$")
-
-    line_num = 0
-    try:
-        with open(txt_file_path, "r", encoding="utf-8") as f:
-            for line_num, line in enumerate(f, 1):
-                stripped_line = line.strip()
-
-                if stripped_line.startswith("Edital "):
-                    if current_edital:
-                        editals_data.append(current_edital)
-                    current_edital = {}
-                    continue
-
-                match_title = title_re.match(stripped_line)
-                if match_title:
-                    current_edital['title'] = match_title.group(1).strip()
-                    continue
-                
-                match_agency = agency_re.match(stripped_line)
-                if match_agency:
-                    current_edital['agency'] = match_agency.group(1).strip()
-                    continue
-
-                match_deadline = deadline_re.match(stripped_line)
-                if match_deadline:
-                    current_edital['deadline'] = match_deadline.group(1).strip()
-                    continue
-
-                match_url = url_re.match(stripped_line)
-                if match_url:
-                    current_edital['url'] = match_url.group(1).strip()
-                    continue
-
-                match_number = number_re.match(stripped_line)
-                if match_number:
-                    current_edital['number'] = match_number.group(1).strip()
-                    continue
-
-                if re.match(r"^-+$", stripped_line): # Procura por uma linha com apenas hifens
-                    if current_edital:
-                        editals_data.append(current_edital)
-                    current_edital = {}
-                    continue
-
-        if current_edital:
-            editals_data.append(current_edital)
-
-        print(f"DEBUG: Parseados {len(editals_data)} editais do arquivo TXT para download.")
-
-    except Exception as e:
-        print(f"ERRO: Ocorreu um erro ao ler ou parsear o arquivo TXT na linha {line_num}: {e}. Não foi possível baixar PDFs.")
-        return 0
-
-    if not editals_data:
-        print("Nenhum edital encontrado no arquivo TXT para baixar PDFs.")
-        return 0
-
-    os.makedirs(download_dir, exist_ok=True)
-    print(f"DEBUG: Diretório de download '{download_dir}' assegurado.")
-
-    download_count = 0
-    failed_downloads = []
-
-    for edital in editals_data:
-        title = edital.get('title', 'titulo_desconhecido')
-        url = edital.get('url') 
-
-        final_title_sanitized = _sanitize_filename(title)
-        
-        if not url or url.lower() == 'url desconhecida':
-            print(f"AVISO: Edital '{final_title_sanitized}' não possui URL válida. Pulando.")
-            continue
-
-        file_path = os.path.join(download_dir, f"{final_title_sanitized}.pdf")
-
-        if os.path.exists(file_path):
-            print(f"DEBUG: PDF '{final_title_sanitized}.pdf' já existe. Pulando download.")
-            download_count += 1
+            successful_downloads_paths.append(file_path) # Adiciona à lista de sucessos, mesmo se já existia
             continue
 
         print(f"DEBUG: Baixando '{final_title_sanitized}.pdf' de '{url}'...")
         if download_pdf(url, file_path):
-            download_count += 1
+            successful_downloads_paths.append(file_path) # Adiciona o caminho do novo PDF baixado
         else:
-            failed_downloads.append(f"{final_title_sanitized} (URL: {url})")
+            # Não é mais necessário adicionar a uma lista de falhas interna, 
+            # pois a função retorna apenas os caminhos dos sucessos.
+            pass
 
     print(f"\n--- Download de PDFs Concluído ---")
-    print(f"Total de PDFs processados (baixados ou já existentes): {download_count}")
-    if failed_downloads:
-        print("Falhas no download:")
-        for fail in failed_downloads:
-            print(f"- {fail}")
-    else:
-        print("Todos os PDFs foram baixados ou já existiam no diretório.")
+    print(f"Total de PDFs baixados (nesta execução): {len(successful_downloads_paths)}")
+    # A lista de falhas não é mais impressa aqui, pois a função agora retorna a lista de caminhos.
+    # Se quiser as falhas, a função download_pdf já imprime o ERRO/AVISO individualmente.
     
-    return download_count
+    return successful_downloads_paths 
