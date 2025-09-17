@@ -77,7 +77,8 @@ def perguntar_openai(pergunta: str, contexto: str, chat_history: Optional[List[D
         messages=messages_for_llm, # Passa as mensagens construídas
         extra_headers=extra_headers_config,
     )
-    return response.choices[0].message.content if response.choices[0].message.content else ""
+    return response.choices[0].message.content.strip() if response.choices[0].message.content else ""
+
 
 # --- Lógica de Recuperação Híbrida (MANTIDA COMO ESTÁ, apenas para referência) ---
 def retrieve_documents(pergunta: str, vectorstore_instance: Chroma) -> list[Document]:

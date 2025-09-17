@@ -49,7 +49,7 @@ async def run_fomento_search_agent() -> List[Dict[str, Any]]:
     e que sejam direcionados a INSTITUIÇÕES DE ENSINO (universidades, escolas, institutos de pesquisa).
 
     Comece pesquisando em sites conhecidos de agências de fomento brasileiras ou grandes universidades.
-    Exemplos de sites para começar: FAPESP, CNPq, Capes, Finep, ou portais de notícias sobre pesquisa.
+    Acessar TODOS os seguintes sites: CNPq, Capes, Finep.
     Para cada edital relevante que encontrar:
     - Verifique se está realmente aberto (não encerrado ou futuro).
     - Verifique se é para instituições de ensino.
