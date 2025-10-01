@@ -1,32 +1,32 @@
-# # main.py
-# import os
-# import asyncio
-# from dotenv import load_dotenv
-# import json
-# from typing import List, Dict, Any # Importar tipos para o histórico de chat
+# main.py
+import os
+import asyncio
+from dotenv import load_dotenv
+import json
+from typing import List, Dict, Any # Importar tipos para o histórico de chat
 
-# # Importa as funções de alto nível dos seus módulos separados
-# from browser_agent import run_fomento_search_agent
-# from indexador_pdf import process_pdfs_into_documents # Usando o nome que você forneceu
-# from rag import HuggingFaceEmbedding, perguntar_openai, retrieve_documents # Usando o nome que você forneceu
-# from langchain_chroma import Chroma
-# from langchain_core.documents import Document
+# Importa as funções de alto nível dos seus módulos separados
+from browser_agent import run_fomento_search_agent
+from indexador_pdf import process_pdfs_into_documents # Usando o nome que você forneceu
+from rag import HuggingFaceEmbedding, perguntar_openai, retrieve_documents # Usando o nome que você forneceu
+from langchain_chroma import Chroma
+from langchain_core.documents import Document
 
-# # Importa a função de download
-# from download_manager import download_pdfs_from_editals_json
+# Importa a função de download
+from download_manager import download_pdfs_from_editals_json
 
-# # --- Configurações Iniciais ---
-# load_dotenv()
-# os.environ["TOKENIZERS_PARALLELISM"] = "false"
+# --- Configurações Iniciais ---
+load_dotenv()
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-# # --- Inicialização Global da Vector Store e Embedding ---
-# print("Iniciando sistema de RAG (global)...")
-# embedding_function = HuggingFaceEmbedding()
-# vectorstore = Chroma(
-#     embedding_function=embedding_function,
-#     persist_directory="chroma"
-# )
-# print("✅ Sistema de RAG e Vector Store carregados globalmente!")
+# --- Inicialização Global da Vector Store e Embedding ---
+print("Iniciando sistema de RAG (global)...")
+embedding_function = HuggingFaceEmbedding()
+vectorstore = Chroma(
+    embedding_function=embedding_function,
+    persist_directory="chroma"
+)
+print("✅ Sistema de RAG e Vector Store carregados globalmente!")
 
 # # --- Função Auxiliar para Adicionar Documentos à Vector Store ---
 # def add_documents_to_vectorstore(documents_to_add: list[Document]):

@@ -102,7 +102,7 @@ def _parse_deadline(deadline_str: str) -> list[datetime]:
     # A is_edital_open já lida com os termos de "sempre aberto" no início, então se chegamos aqui
     # e parsed_dates está vazia, significa que não há data válida para comparar.
     if not parsed_dates:
-        print(f"AVISO: _parse_deadline não conseguiu extrair datas válidas da parte: '{part}'")
+        print(f"AVISO: _parse_deadline não conseguiu extrair datas válidas da string: '{deadline_str}'")
 
     return parsed_dates
 

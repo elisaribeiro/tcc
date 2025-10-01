@@ -1,81 +1,9 @@
 [
   {
-    "title": "FAPESP e Fraunhofer-Gesellschaft Seed Fund 2025",
-    "agency": "FAPESP",
-    "deadline": "30/06/2025",
-    "url": "https://fapesp.br/17539"
-  },
-  {
     "title": "SPRINT 2025",
     "agency": "FAPESP",
-    "deadline": "30/06/2025 (Edição 1), 27/10/2025 (Edição 2), 23/02/2026 (Edição 3)",
+    "deadline": "27/10/2025 (Edição 2), 23/02/2026 (Edição 3)",
     "url": "https://fapesp.br/17550"
-  },
-  {
-    "title": "International Thematic Grant (InTheGra)",
-    "agency": "FAPESP",
-    "deadline": "15/07/2025",
-    "url": "https://fapesp.br/17523"
-  },
-  {
-    "title": "Chamada Futuros Cientistas – Prof. Sérgio Muniz Oliva Filho",
-    "agency": "FAPESP",
-    "deadline": "14/07/2025",
-    "url": "https://fapesp.br/17552/"
-  },
-  {
-    "title": "Chamada FAPESP/Global Alliance for Chronic Diseases – GACD 2025: “Strengthening Health Systems”",
-    "agency": "FAPESP",
-    "deadline": "30/07/2025",
-    "url": "https://fapesp.br/17576"
-  },
-  {
-    "title": "FAPESP/BAYLAT – Chamada de Propostas para Workshops 2025",
-    "agency": "FAPESP",
-    "deadline": "30/07/2025",
-    "url": "https://fapesp.br/17531"
-  },
-  {
-    "title": "Chamada Conjunta FAPESP-Instituto Butantan para Pesquisadores Internacionais",
-    "agency": "FAPESP",
-    "deadline": "01/08/2025",
-    "url": "https://fapesp.br/17570"
-  },
-  {
-    "title": "Chamada de Propostas 2025 do Programa FAPESP para o Atlântico Sul e Antártica - PROASA",
-    "agency": "FAPESP",
-    "deadline": "04/08/2025",
-    "url": "https://fapesp.br/17409"
-  },
-  {
-    "title": "Chamada de Propostas de Redes FAPESP de Pesquisa em Tecnologias Quânticas - QuTIa",
-    "agency": "FAPESP",
-    "deadline": "04/08/2025",
-    "url": "https://fapesp.br/17567"
-  },
-  {
-    "title": "Chamada FAPESP Primeiros Projetos – Edital 2025",
-    "agency": "FAPESP",
-    "deadline": "15/08/2025",
-    "url": "https://fapesp.br/17465"
-  },
-  {
-    "title": "Chamada Auxílio à Pesquisa Projeto Inicial (Pi) – Edital 2025",
-    "agency": "FAPESP",
-    "deadline": "15/08/2025",
-    "url": "https://fapesp.br/17466"
-  },
-  {
-    "title": "Chamada de Propostas Conjuntas: University of Birmingham (UoB) e FAPESP 2025",
-    "agency": "FAPESP",
-    "deadline": "05/09/2025",
-    "url": "https://fapesp.br/17519"
-  },
-  {
-    "title": "Chamada para o Programa de Leitorado FAPESP e Embaixada do Brasil na França – edição 1/2025",
-    "agency": "FAPESP",
-    "deadline": "08/09/2025",
-    "url": "https://fapesp.br/17538"
   },
   {
     "title": "Chamada Centros de Pesquisa, Inovação e Difusão (CEPID) – 2024",
@@ -92,7 +20,7 @@
   {
     "title": "Chamada FAPESP - National Science Foundation, Diretoria de Geociências",
     "agency": "FAPESP",
-    "deadline": "Aberta o ano todo",
+    "deadline": "fluxo contínuo",
     "url": "https://fapesp.br/17293"
   },
   {
@@ -102,33 +30,135 @@
     "url": "https://fapesp.br/16466"
   },
   {
-    "title": "CHAMADA PÚBLICA MCTI/CNPq/CSIC Nº 9/2025",
-    "agency": "CNPq",
-    "deadline": "12/09/2025",
-    "url": "http://resultado.cnpq.br/5825127184020825"
-  },
-  {
-    "title": "Chamada Nº 008/2025 Apoio a Eventos Técnico-Científicos em Saúde",
-    "agency": "CNPq",
-    "deadline": "07/07/2025",
-    "url": "http://resultado.cnpq.br/0725522967495535"
-  },
-  {
-    "title": "CHAMADA PÚBLICA MCTI/CNPq/nº 04/2025",
-    "agency": "CNPq",
-    "deadline": "30/06/2025",
-    "url": "http://resultado.cnpq.br/9078055741303327"
-  },
-  {
-    "title": "Chamada de propostas Canadá – Brazil 2025",
-    "agency": "FAPESP",
-    "deadline": "17/09/2025",
-    "url": "https://fapesp.br/17535"
-  },
-  {
     "title": "Estratégias de Manejo, Uso e Conservação das Unidades de Conservação Federais Marinhas do Estado de São Paulo",
     "agency": "FAPESP",
     "deadline": "14/11/2025",
     "url": "https://fapesp.br/17603"
+  },
+  {
+    "title": "PROINFRA 2025 UNIDADES DE PESQUISA MCTI",
+    "agency": "Finep",
+    "deadline": "30/09/2025",
+    "url": "/chamadas-publicas/chamadapublica/754"
+  },
+  {
+    "title": "Chamada CNPq/MIR nº 18/2025 - Ciência e Tecnologia para Fortalecimento do Sistema Nacional de Promoção da Igualdade Racial",
+    "agency": "CNPq",
+    "deadline": "29/10/2025",
+    "url": "http://resultado.cnpq.br/1077219938298918"
+  },
+  {
+    "title": "Chamada CNPq/FNDCT/SGPR/MDS nº 17/2025 Extensão e Pesquisa em Participação Social nos Territórios",
+    "agency": "FNDCT",
+    "deadline": "17/10/2025",
+    "url": "http://resultado.cnpq.br/7037548665044968"
+  },
+  {
+    "title": "Chamada CNPq/MMA/CONFAP/FAPs Nº 15/2025 - SinBiose",
+    "agency": "MMA",
+    "deadline": "09/10/2025",
+    "url": "http://resultado.cnpq.br/0514387462664420"
+  },
+  {
+    "title": "MCTI/CNPq/DFG Nº 14/2025",
+    "agency": "MCTI",
+    "deadline": "15/12/2025",
+    "url": "http://resultado.cnpq.br/3531717483915368"
+  },
+  {
+    "title": "Chamada Pública MCTI/CNPq nº 16/2025 Apoio a Projetos Internacionais de Pesquisa Científica, Tecnológica e de Inovação",
+    "agency": "MCTI",
+    "deadline": "06/10/2025",
+    "url": "http://resultado.cnpq.br/5545417941231944"
+  },
+  {
+    "title": "CHAMADA PÚBLICA MCTI/CNPQ DE PROJETOS DE COOPERAÇÃO INTERNACIONAL - Nº 16/2025",
+    "agency": "MCTI",
+    "deadline": "06/10/2025",
+    "url": "http://resultado.cnpq.br/5548576599146516"
+  },
+  {
+    "title": "CHAMADA ERC- CNPQ - 2025 Nº 13/2025",
+    "agency": "CNPQ",
+    "deadline": "30/09/2025",
+    "url": "http://memoria2.cnpq.br/web/guest/chamadas-publicas?p_p_id=resultadosportlet_WAR_resultadoscnpqportlet_INSTANCE_0ZaM&idDivulgacao=13085&filtro=abertas&detalha=chamadaDetalhada&id=47-2678-10155"
+  },
+  {
+    "title": "Chamada de Propostas FAPESP-FAPERJ para Projetos em Tecnologias Quânticas – 2025",
+    "agency": "FAPESP",
+    "deadline": "13/10/2025",
+    "url": "https://fapesp.br/17730"
+  },
+  {
+    "title": "FAPESP – Agence Nationale de la Recherche Chamada de Propostas para o Programa \"Generic Call for Proposals 2026\"",
+    "agency": "FAPESP",
+    "deadline": "14/10/2025",
+    "url": "https://fapesp.br/17789"
+  },
+  {
+    "title": "Seleção Pública - Programa FINEP - Tecnova III",
+    "agency": "FINEP",
+    "deadline": "20/10/2025",
+    "url": "https://fapesp.br/17667"
+  },
+  {
+    "title": "Chamada FAPESP/Global Alliance for Chronic Diseases – GACD 2025: \"Strengthening Health Systems\"",
+    "agency": "FAPESP",
+    "deadline": "22/10/2025",
+    "url": "https://fapesp.br/17576"
+  },
+  {
+    "title": "Chamada de Apoio à Infraestrutura de Pesquisa em Coleções Biológicas",
+    "agency": "FAPESP",
+    "deadline": "31/10/2025",
+    "url": "https://fapesp.br/17669"
+  },
+  {
+    "title": "Chamada de Apoio à Infraestrutura de Pesquisa em Acervos Museológicos, Bibliográficos e Arquivísticos",
+    "agency": "FAPESP",
+    "deadline": "31/10/2025",
+    "url": "https://fapesp.br/17670"
+  },
+  {
+    "title": "Chamada de Propostas FAPESP/CONFAP/ERC 2025",
+    "agency": "FAPESP",
+    "deadline": "03/11/2025",
+    "url": "https://fapesp.br/17716"
+  },
+  {
+    "title": "Chamada Conjunta Transnacional FAPESP/CONFAP/SBEP 2025",
+    "agency": "FAPESP",
+    "deadline": "06/11/2025",
+    "url": "https://fapesp.br/17762"
+  },
+  {
+    "title": "Chamada Restauração do funcionamento, da integridade e da conectividade dos ecossistemas – BiodivConnect (FAPESP/CONFAP/Biodiversa+)",
+    "agency": "FAPESP",
+    "deadline": "10/11/2025",
+    "url": "https://fapesp.br/17760"
+  },
+  {
+    "title": "Chamada Conjunta Transnacional sobre Água e Saúde (FAPESP/CONFAP/Water4All)",
+    "agency": "FAPESP",
+    "deadline": "13/11/2025",
+    "url": "https://fapesp.br/17761"
+  },
+  {
+    "title": "Chamada de Propostas de Redes FAPESP de Colaboração em Pesquisa em Sistemas Alimentares Saudáveis- Gripe Aviária",
+    "agency": "FAPESP",
+    "deadline": "28/11/2025",
+    "url": "https://fapesp.br/17697"
+  },
+  {
+    "title": "Chamada de Propostas FAPESP e Universidade da Guiana - UG",
+    "agency": "FAPESP",
+    "deadline": "01/12/2025",
+    "url": "https://fapesp.br/17727"
+  },
+  {
+    "title": "FAPESP-BBSRC Pump-Priming Award (FAPPA)",
+    "agency": "FAPESP",
+    "deadline": "fluxo contínuo",
+    "url": "http://www.fapesp.br/11999"
   }
 ]

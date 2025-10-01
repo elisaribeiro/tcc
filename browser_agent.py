@@ -37,7 +37,7 @@ class ChatOpenRouter(ChatOpenAI):
             **kwargs
         )
 
-async def run_fomento_search_agent() -> List[Dict[str, Any]]:
+def run_fomento_search_agent() -> List[Dict[str, Any]]:
     llm = ChatOpenRouter(
         model_name="google/gemini-2.0-flash-lite-001", # Modelo mantido
         temperature=0.3,
@@ -45,16 +45,28 @@ async def run_fomento_search_agent() -> List[Dict[str, Any]]:
 
     task_description = """
     Você é um assistente especializado em encontrar editais de fomento para instituições de ensino.
-    Sua tarefa é navegar na internet para encontrar editais de fomento que estejam ATUALMENTE ABERTOS
-    e que sejam direcionados a INSTITUIÇÕES DE ENSINO (universidades, escolas, institutos de pesquisa).
+    Sua tarefa é navegar na internet para encontrar editais de fomento que estejam ATUALMENTE ABERTOS e que sejam direcionados a INSTITUIÇÕES DE ENSINO (universidades, escolas, institutos de pesquisa).
 
     Comece pesquisando em sites conhecidos de agências de fomento brasileiras ou grandes universidades.
-    Acessar TODOS os seguintes sites: CNPq, Capes, Finep.
+    Acesse obrigatoriamente TODOS os seguintes links:
+
+    [http://memoria2.cnpq.br/web/guest/chamadas-publicas];
+    [https://www.gov.br/capes/pt-br/assuntos/editais-e-resultados-capes];
+    [http://www.finep.gov.br/chamadas-publicas/chamadaspublicas?situacao=aberta];
+    [https://fapesp.br/chamadas/]
+
+    IMPORTANTE: Retorne APENAS links diretos de editais específicos de fomento abertos. NÃO retorne páginas institucionais das agências (ex: não retornar "https://www.gov.br/cnpq/pt-br", mas sim o link direto do edital, como "https://www.gov.br/cnpq/pt-br/editais/resultado/2025/edital-12345" ou "https://fapesp.br/edital/2025/01"). O link deve apontar diretamente para o edital específico, seja PDF ou página detalhada do edital, e não para a página principal da agência.
+
     Para cada edital relevante que encontrar:
     - Verifique se está realmente aberto (não encerrado ou futuro).
     - Verifique se é para instituições de ensino.
-    - Anote o Título do Edital, a Agência de Fomento, o Prazo Final (se disponível), e a URL direta do edital.
+    - Anote o Título do Edital, a Agência de Fomento, o Prazo Final (se disponível), e a URL direta do edital (NUNCA institucional).
     - Se encontrar um edital relevante, extraia essas informações de forma estruturada.
+
+    Exemplos de links válidos:
+    - https://www.gov.br/cnpq/pt-br/editais/resultado/2025/edital-12345
+    - https://fapesp.br/edital/2025/01
+    - https://www.gov.br/capes/pt-br/editais/edital-98765
 
     É CRÍTICO QUE SUA SAÍDA FINAL SEJA APENAS O JSON. NÃO ADICIONE TEXTO EXPLICATIVO ANTES OU DEPOIS.
     AO FINAL DA TAREFA, RETORNE UMA ÚNICA SAÍDA JSON CONTENDO UMA LISTA DE OBJETOS, ONDE CADA OBJETO REPRESENTA UM EDITAL COM AS CHAVES 'title', 'agency', 'deadline', E 'url'.
@@ -67,7 +79,7 @@ async def run_fomento_search_agent() -> List[Dict[str, Any]]:
     )
 
     print("Iniciando a busca online por editais de fomento com o Browser-Use...")
-    result_history = await agent.run(max_steps=50) # Mantenha 50 para testar mais rápido
+    result_history = asyncio.run(agent.run(max_steps=50))  # Torna a chamada síncrona
 
     final_content_string = ""
     # Esta variável agora é o resultado do melhor JSON encontrado no parsing principal, ou vazio

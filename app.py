@@ -17,6 +17,8 @@ from langchain_core.documents import Document
 
 # Importa a função de download
 from download_manager import download_pdfs_from_editals_json
+from edital_manager import load_cached_grants
+import re
 
 # --- Configurações Iniciais ---
 load_dotenv()
@@ -29,17 +31,70 @@ vectorstore = Chroma(
     persist_directory="chroma"
 )
 
+def responde_por_metadados(pergunta: str) -> str | None:
+    grants = load_cached_grants()
+    # Exemplo: deadline até dezembro de 2025
+    deadline_match = re.search(r'(até|antes de|no máximo)\s*(dezembro|12)[/\- ]?2025', pergunta, re.IGNORECASE)
+    if deadline_match:
+        # Extrai todos os editais com deadline até 31/12/2025
+        from datetime import datetime
+        def parse_deadline(deadline):
+            # Extrai datas do campo deadline (pode ter múltiplas datas)
+            datas = re.findall(r'(\d{2}/\d{2}/\d{4})', deadline)
+            return [datetime.strptime(d, '%d/%m/%Y') for d in datas]
+        limite = datetime(2025, 12, 31)
+        resultados = []
+        for edital in grants:
+            datas = parse_deadline(edital.get('deadline',''))
+            if datas and any(data <= limite for data in datas):
+                resultados.append(edital)
+        if resultados:
+            resposta = 'Editais com deadline até dezembro de 2025:\n'
+            for e in resultados:
+                resposta += f"- {e.get('title','')} (Agência: {e.get('agency','')}, Deadline: {e.get('deadline','')}, URL: {e.get('url','')})\n"
+            return resposta
+        else:
+            return 'Nenhum edital com deadline até dezembro de 2025 encontrado.'
+    # Outros filtros podem ser implementados aqui (ex: agência, título, etc)
+    return None
+
 def start_qa_session(user_question):
     print("\n--- Inciando sessão de Perguntas e Respostas. Digite 'voltar' para retornar ao menu principal. ---")
     
     chat_history: List[Dict[str, str]] = [] # NOVO: Inicializa o histórico de chat para a sessão
 
-    # user_question = input("\nSua pergunta (ou 'voltar'): ").strip()
-    # if user_question.lower() == 'voltar':
-    #     print("Retornando ao menu principal.")
-    #     break
+    # Tenta responder por metadados antes de consultar o LLM
+    resposta_meta = responde_por_metadados(user_question)
+    if resposta_meta:
+        return resposta_meta
+
+    # --- Filtro por número de edital na pergunta ---
+    edital_num_match = re.search(r'(\d{1,3}/\d{4})', user_question)
+    edital_num = edital_num_match.group(1) if edital_num_match else None
 
     docs = retrieve_documents(user_question, vectorstore)
+    print(f"Docs retornados: {len(docs)}")
+    # Se houver número de edital, priorize chunks que contenham esse número
+    if edital_num:
+        docs_prioritarios = [d for d in docs if edital_num in d.page_content or edital_num in d.metadata.get('title','')]
+        docs = docs_prioritarios + [d for d in docs if edital_num not in d.page_content and edital_num not in d.metadata.get('title','')]
+        print(f"Chunks priorizados para edital {edital_num}: {len(docs_prioritarios)}")
+
+    # Filtro por URL fornecida na pergunta (mantido)
+    url_match = re.search(r'https?://\S+', user_question)
+    url_prioritaria = url_match.group(0) if url_match else None
+    if url_prioritaria:
+        docs_prioritarios = [d for d in docs if d.metadata.get('url','') == url_prioritaria]
+        docs = docs_prioritarios + [d for d in docs if d.metadata.get('url','') != url_prioritaria]
+        print(f"Chunks priorizados para URL {url_prioritaria}: {len(docs_prioritarios)}")
+
+    for d in docs:
+        score = getattr(d, 'score', None) or getattr(d, 'similarity_score', None)
+        if score is not None:
+            print(f"--- DOC (score: {score:.2f}) ---")
+        else:
+            print("--- DOC ---")
+        print(d.page_content[:200])  # Mostra o início do texto de cada doc
 
     MAX_CHARS = 80000 
     contexto = ""
@@ -47,24 +102,26 @@ def start_qa_session(user_question):
         response_content = "Desculpe, não encontrei informações relevantes para sua pergunta nos editais indexados. Por favor, tente indexar mais dados."
     else:
         for doc in docs:
-            if len(contexto) + len(doc.page_content) + 2 <= MAX_CHARS:
-                contexto += doc.page_content + "\n\n"
-            else:
-                print(f"⚠️ Limite de caracteres do contexto atingido. Pulando documentos restantes.")
-                break
-        
+            meta = doc.metadata
+            link = meta.get('url', '')
+            deadline = meta.get('deadline', '')
+            score = getattr(doc, 'score', None) or getattr(doc, 'similarity_score', None)
+            contexto += doc.page_content + "\n"
+            if score is not None:
+                contexto += f"[Similaridade com a pergunta: {score:.2%}]\n"
+            if link:
+                contexto += f"Link do edital: {link}\n"
+            if deadline:
+                contexto += f"Prazo (deadline): {deadline}\n"
+            contexto += "\n"
+        print("Contexto passado para o LLM:")
+        print(contexto[:1000])  # Mostra o início do contexto
         try:
             # Passa o histórico de chat para a função perguntar_openai
             response_content = perguntar_openai(user_question, contexto, chat_history=chat_history) 
         except Exception as e:
             response_content = f"Ocorreu um erro ao gerar a resposta: {e}. Por favor, verifique sua chave da API ou o status do serviço do LLM."
-    
-    # # Adiciona a resposta do assistente ao histórico de chat
-    # chat_history.append({"role": "assistant", "content": response_content})
     return response_content
-    # print("\n📌 Resposta do modelo:\n", response_content)
-
-
 
 # --- CONFIGURAÇÃO DA PÁGINA ---
 # Define o título da página, o ícone e o layout.
@@ -88,8 +145,8 @@ def add_documents_to_vectorstore(documents_to_add: list[Document]):
     else:
         print("Nenhum documento para adicionar à Vector Store.")
 
-async def chama_browser_use():
-    online_grants_data = await run_fomento_search_agent()
+def chama_browser_use():
+    online_grants_data = run_fomento_search_agent()
     if online_grants_data:
         print(f"**{len(online_grants_data)}** editais abertos (incluindo novos e existentes) agora estão no cache.")
         
@@ -105,6 +162,7 @@ async def chama_browser_use():
         # Processa APENAS os PDFs que foram baixados NESTA execução
         if downloaded_pdf_paths:
             downloaded_pdf_chunks = process_pdfs_into_documents(downloaded_pdf_paths)
+            print(f"Total de chunks retornados: {len(downloaded_pdf_chunks)}")
             add_documents_to_vectorstore(downloaded_pdf_chunks)
         else:
             print("Nenhum PDF baixado para indexar a partir dos editais online.")
@@ -135,12 +193,12 @@ if "current_chat_id" not in st.session_state:
 
 # --- LÓGICA DA BARRA LATERAL (SIDEBAR) ---
 with st.sidebar:
-    st.title("Atualizar Editais")
-    if st.button("🔄 Atualizar Editais"):
+    #st.title("Atualizar Editais")
+    #if st.button("🔄 Atualizar Editais"):
         # Inicia o processo de atualização dos editais
-        with st.spinner("Atualizando editais..."):
-            asyncio.run(chama_browser_use())
-        st.success("Editais atualizados com sucesso!")
+        #with st.spinner("Atualizando editais..."):
+            #asyncio.run(chama_browser_use())
+        #st.success("Editais atualizados com sucesso!")
 
     st.title("Histórico de Conversas")
 
@@ -174,10 +232,10 @@ with st.sidebar:
             # Força o rerun para exibir o chat selecionado
             st.rerun()
 
-    with st.expander("Configurações Avançadas", expanded=False):
-        st.write("API do OpenRouter")
-        api_key = st.text_input("Chave da API", type="password", key="api_key_input")
-        os.environ["OPENROUTER_API_KEY"] = api_key
+    #with st.expander("Configurações Avançadas", expanded=False):
+       # st.write("API do OpenRouter")
+       # api_key = st.text_input("Chave da API", type="password", key="api_key_input")
+        #os.environ["OPENROUTER_API_KEY"] = api_key
 
 # --- LÓGICA DA JANELA PRINCIPAL DO CHAT ---
 

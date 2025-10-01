@@ -27,3 +27,4 @@ langchain-community
 chromadb
 pypdf
 langchain-chroma
+fpdf
